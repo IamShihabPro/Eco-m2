@@ -1,0 +1,61 @@
+from typing import Any
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from first_app import models
+from django.urls import reverse_lazy
+
+def index_test(request):
+    return HttpResponse('Hello world!')
+
+
+# def index(request):
+#     musician_list = Musician.objects.order_by('first_name')
+#     diction = {'title': 'Home Page', 'musician_list': musician_list}
+#     return render(request, 'first_app/index.html', context=diction)
+
+
+
+# class IndexView(View):
+#     def get(self, request):
+#         return HttpResponse('Hello worlds!')
+
+# class IndexView(TemplateView):
+#     template_name = 'first_app/index.html'
+
+#     def get_context_data(self, **kwargs):
+#         context= super().get_context_data(**kwargs)
+#         context['sample_text_1'] = 'Sample Text 1'
+#         context['sample_text_2'] = 'Sample Text 2'
+#         return context
+
+class IndexView(ListView):
+    context_object_name = 'musician_list'
+    model = models.Musician
+    template_name = 'first_app/index.html'
+
+
+class MusicanDetail(DetailView):
+    context_object_name = 'musician'
+    model = models.Musician
+    template_name = 'first_app/musician_details.html'
+
+
+class AddMusician(CreateView):
+    fields = ('first_name', 'last_name', 'instrument')
+    model = models.Musician
+    template_name = 'first_app/musician_form.html'
+
+class UpdateMusician(UpdateView):
+    fields = ('first_name', 'last_name', 'instrument')
+    model = models.Musician
+    template_name = 'first_app/musician_form.html'
+
+
+class DeleteMusician(DeleteView):
+    context_object_name = 'musician'
+    model = models.Musician
+    success_url = reverse_lazy('index')
+    template_name = 'first_app/delete_musician.html'
+
+    
